@@ -1,0 +1,10 @@
+{
+  "name": "fastfeet-backend",
+  "version": "1.0.0",
+  "description": "Backend of the app fastfeet",
+  "main": "server.js",
+  "repository": "https://github.com/ciscoproo0/fastfeet.git",
+  "author": "Francisco <ciscoproo0@gmail.com>",
+  "license": "MIT",
+  "private": false
+}
