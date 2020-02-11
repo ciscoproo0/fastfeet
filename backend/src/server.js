@@ -1,21 +1,8 @@
-import express from 'express';
+import app from './app';
 
-import routes from './routes';
+//  it is imported to initialize db
+import './database';
 
-class App {
-  constructor() {
-    this.server = express();
-    this.middlewares();
-    this.routes();
-  }
+app.listen(process.env.PORT);
 
-  middlewares() {
-    this.server.use(express.json());
-  }
-
-  routes() {
-    this.server.use(routes);
-  }
-}
-
-export default new App().server;
+console.log(`Server listen on port ${process.env.PORT}`);
