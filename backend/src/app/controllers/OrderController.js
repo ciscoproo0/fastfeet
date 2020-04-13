@@ -139,8 +139,8 @@ class OrderController {
           .required(),
       }),
       order: Yup.object().shape({
-        // recipientId: Yup.number().required(),
-        // deliverymanId: Yup.number().required(),
+        recipientId: Yup.number().required(),
+        deliverymanId: Yup.number().required(),
         product: Yup.string().required(),
       }),
     });
