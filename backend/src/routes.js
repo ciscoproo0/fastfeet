@@ -23,9 +23,13 @@ routes.post('/sessions', SessionController.store);
 // from here, the application will verify for bearer token in headers
 routes.use(authMiddleware);
 
+routes.get('/recipients', RecipientController.index);
+
 routes.post('/recipients', RecipientController.store);
 
-routes.put('/recipients', RecipientController.update);
+routes.put('/recipients/:id', RecipientController.update);
+
+routes.delete('/recipients/:id', RecipientController.delete);
 
 routes.get('/deliveryman', DeliverymanController.index);
 
@@ -44,6 +48,8 @@ routes.get('/orders/deliveryman/:id', OrderController.index);
 routes.get('/orders/deliveryman/:id/deliveries', OrderController.index);
 
 routes.post('/orders', OrderController.store);
+
+routes.put('/orders/:id', OrderController.update);
 
 routes.put('/orders/:id/start_date', OrderController.update);
 

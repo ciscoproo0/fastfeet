@@ -9,7 +9,7 @@ import OrderCancelled from '../jobs/OrderCancelled';
 
 class DeliveryProblemController {
   async index(req, res) {
-    const { page = 1, id } = req.params;
+    const { page = 1, id } = req.query;
     const { path } = req;
 
     if (path === `/delivery/${id}/problems`) {
@@ -69,6 +69,7 @@ class DeliveryProblemController {
         },
       ],
     });
+
     return res.json(problems);
   }
 

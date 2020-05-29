@@ -7,17 +7,19 @@ import OrderCreated from '../jobs/OrderCreated';
 import Order from '../models/Order';
 import Recipient from '../models/Recipient';
 import Deliveryman from '../models/Deliveryman';
+import File from '../models/File';
 import OrderCancelled from '../jobs/OrderCancelled';
 
 class OrderController {
   async index(req, res) {
-    const { page = 1 } = req.query;
+    const { page = 1, q: querySearch } = req.query;
     const { path } = req;
 
     if (path === `/orders/deliveryman/${req.params.id}`) {
-      const orders = await Order.findOne({
+      const orders = await Order.findAll({
         where: {
-          id: req.params.id,
+          deliveryman_id: req.params.id,
+          end_date: null,
           canceled_at: null,
         },
         attributes: ['id', 'product', 'created_at'],
@@ -28,6 +30,13 @@ class OrderController {
             model: Deliveryman,
             as: 'deliveryman',
             attributes: ['id', 'name', 'email'],
+            include: [
+              {
+                model: File,
+                as: 'avatar',
+                attributes: ['id', 'path', 'url'],
+              },
+            ],
           },
           {
             model: Recipient,
@@ -54,9 +63,9 @@ class OrderController {
       return res.json(orders);
     }
     if (path === `/orders/deliveryman/${req.params.id}/deliveries`) {
-      const orders = await Order.findOne({
+      const orders = await Order.findAll({
         where: {
-          id: req.params.id,
+          deliveryman_id: req.params.id,
           end_date: {
             [Op.ne]: null,
           },
@@ -69,6 +78,13 @@ class OrderController {
             model: Deliveryman,
             as: 'deliveryman',
             attributes: ['id', 'name', 'email'],
+            include: [
+              {
+                model: File,
+                as: 'avatar',
+                attributes: ['id', 'path', 'url'],
+              },
+            ],
           },
           {
             model: Recipient,
@@ -97,9 +113,20 @@ class OrderController {
 
     const orders = await Order.findAll({
       where: {
-        canceled_at: null,
+        // canceled_at: null,
+        product: {
+          [Op.iLike]: `%${querySearch || ''}%`,
+        },
       },
-      attributes: ['id', 'product', 'created_at'],
+      attributes: [
+        'id',
+        'signature_id',
+        'product',
+        'created_at',
+        'start_date',
+        'end_date',
+        'canceled_at',
+      ],
       limit: 20,
       offset: (page - 1) * 20,
       include: [
@@ -107,22 +134,36 @@ class OrderController {
           model: Deliveryman,
           as: 'deliveryman',
           attributes: ['id', 'name', 'email'],
+          include: [
+            {
+              model: File,
+              as: 'avatar',
+              attributes: ['id', 'path', 'url'],
+            },
+          ],
         },
         {
           model: Recipient,
           as: 'recipient',
           attributes: [
+            'id',
             'name',
             'address',
             'number',
             'complement',
             'city',
             'state',
-            'zipCode',
+            'zip_code',
           ],
+        },
+        {
+          model: File,
+          as: 'signature',
+          attributes: ['path', 'name', 'url'],
         },
       ],
     });
+
     return res.json(orders);
   }
 
@@ -214,13 +255,31 @@ class OrderController {
 
   async update(req, res) {
     const schema = Yup.object().shape({
-      signature_id: Yup.number().required(),
+      signature_id: Yup.number().when(['product'], {
+        is: false,
+        then: Yup.number().required(),
+      }),
+      product: Yup.string(),
+      recipient_id: Yup.number().when(['product'], {
+        is: true,
+        then: Yup.number().required(),
+      }),
+      deliveryman_id: Yup.number().when(['product'], {
+        is: true,
+        then: Yup.number().required(),
+      }),
     });
     const { id } = req.params;
     const { path } = req;
 
-    const order = await Order.findByPk(id);
-
+    if (path === `/orders/${id}`) {
+      if (!(await schema.isValid(req.body))) {
+        return res
+          .status(400)
+          .json({ error: 'Validation fails, verify request body' });
+      }
+    }
+    // end_date must be validated because of signature_id
     if (path === `/orders/${id}/end_date`) {
       if (!(await schema.isValid(req.body))) {
         return res
@@ -229,12 +288,17 @@ class OrderController {
       }
     }
 
+    const order = await Order.findByPk(id);
+
     if (!order) {
       return res.status(400).json({ error: 'Order not found, verify ID' });
     }
 
     try {
       switch (path) {
+        case `/orders/${id}`:
+          await order.update(req.body);
+          return res.json(order);
         case `/orders/${id}/start_date`:
           order.start_date = new Date();
           break;

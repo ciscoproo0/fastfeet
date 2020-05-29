@@ -1,13 +1,19 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 
 import Deliveryman from '../models/Deliveryman';
 import File from '../models/File';
 
 class DeliverymanController {
   async index(req, res) {
-    const { page = 1 } = req.query;
+    const { page = 1, name: querySearch } = req.query;
 
     const deliveryman = await Deliveryman.findAll({
+      where: {
+        name: {
+          [Op.iLike]: `%${querySearch || ''}%`,
+        },
+      },
       attributes: [
         'id',
         'name',
@@ -33,6 +39,7 @@ class DeliverymanController {
   async store(req, res) {
     // yup needs to be installed in terminal, will validate items from req.body
     const schema = Yup.object().shape({
+      avatar_id: Yup.string(),
       name: Yup.string().required(),
       email: Yup.string()
         .email()
@@ -52,12 +59,16 @@ class DeliverymanController {
       return res.status(400).json({ error: 'Deliveryman already exists!' });
     }
 
-    const { id, name, email } = await Deliveryman.create(req.body);
+    const { id, name, email, avatar_id, avatar } = await Deliveryman.create(
+      req.body
+    );
 
     return res.status(201).json({
       id,
       name,
       email,
+      avatar_id,
+      avatar,
     });
   }
 
@@ -65,6 +76,7 @@ class DeliverymanController {
     const schema = Yup.object().shape({
       oldEmail: Yup.string().email(),
       name: Yup.string(),
+      avatar_id: Yup.number(),
       email: Yup.string()
         .email()
         .when('oldEmail', (oldEmail, field) =>
@@ -86,7 +98,10 @@ class DeliverymanController {
       if (!deliveryman) {
         return res.status(400).json({ error: 'Deliveryman not found' });
       }
-      const nameUpdate = await deliveryman.update({ name: req.body.name });
+      const nameUpdate = await deliveryman.update({
+        name: req.body.name,
+        avatar_id: req.body.avatar_id,
+      });
 
       return res.json(nameUpdate);
     }
@@ -100,9 +115,11 @@ class DeliverymanController {
       return res.status(400).json({ error: 'User does not exists!' });
     }
 
-    const { id, name, email } = await emailDeliveryman.update(req.body);
+    const { id, name, email, avatar_id } = await emailDeliveryman.update(
+      req.body
+    );
 
-    return res.json({ id, name, email });
+    return res.json({ id, name, email, avatar_id });
   }
 
   async delete(req, res) {
