@@ -9,8 +9,11 @@ import OrderCancelled from '../jobs/OrderCancelled';
 
 class DeliveryProblemController {
   async index(req, res) {
-    const { page = 1, id } = req.query;
+    const { page = 1 } = req.query;
+    const { id } = req.params;
     const { path } = req;
+
+    console.log(id);
 
     if (path === `/delivery/${id}/problems`) {
       const problems = await Problems.findAll({

@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 
 import authConfig from '../../config/auth';
 import User from '../models/User';
+import Deliveryman from '../models/Deliveryman';
 
 class SessionController {
   async store(req, res) {
@@ -10,8 +11,13 @@ class SessionController {
     const schema = Yup.object().shape({
       email: Yup.string()
         .email()
-        .required(),
-      password: Yup.string().required(),
+        .when('deliveryman_id', (deliveryman_id, field) =>
+          !deliveryman_id ? field.required() : field
+        ),
+      password: Yup.string().when('deliveryman_id', (deliveryman_id, field) =>
+        !deliveryman_id ? field.required() : field
+      ),
+      deliveryman_id: Yup.number(),
     });
 
     // Validates body from the request
@@ -19,7 +25,25 @@ class SessionController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { email, password } = req.body;
+    const { email, password, deliveryman_id } = req.body;
+
+    // Bearer token to deliveryman app
+    if (deliveryman_id) {
+      const deliveryman = await Deliveryman.findByPk(deliveryman_id);
+
+      if (!deliveryman) {
+        return res.status(401).json({ error: 'Deliveryman not found' });
+      }
+
+      const { id, name, email: deliveryman_email } = deliveryman;
+
+      return res.json({
+        user: { id, name, deliveryman_email },
+        token: jwt.sign({ id }, authConfig.secret, {
+          expiresIn: authConfig.expiresIn,
+        }),
+      });
+    }
 
     const user = await User.findOne({ where: { email } });
 

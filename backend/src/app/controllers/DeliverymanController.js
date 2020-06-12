@@ -6,9 +6,34 @@ import File from '../models/File';
 
 class DeliverymanController {
   async index(req, res) {
-    const { page = 1, name: querySearch } = req.query;
+    const { page = 1, name: querySearch, id } = req.query;
+    let deliveryman;
 
-    const deliveryman = await Deliveryman.findAll({
+    if (id) {
+      deliveryman = await Deliveryman.findByPk(id, {
+        attributes: [
+          'id',
+          'name',
+          'email',
+          'avatar_id',
+          'createdAt',
+          'updatedAt',
+        ],
+        limit: 20,
+        offset: (page - 1) * 20,
+        include: [
+          {
+            model: File,
+            as: 'avatar',
+            attributes: ['id', 'path', 'url'],
+          },
+        ],
+      });
+
+      return res.json(deliveryman);
+    }
+
+    deliveryman = await Deliveryman.findAll({
       where: {
         name: {
           [Op.iLike]: `%${querySearch || ''}%`,
