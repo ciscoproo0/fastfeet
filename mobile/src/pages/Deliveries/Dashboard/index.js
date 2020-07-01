@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Alert, ActivityIndicator } from 'react-native';
+import { NavigationEvents } from 'react-navigation';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
@@ -38,14 +39,8 @@ const Dashboard = ({ navigation }) => {
   const [refresh, setRefresh] = useState(false);
   const user = useSelector((state) => state.user.profile);
 
-  const getOrders = async (load) => {
+  const getOrders = async () => {
     try {
-      if (load) {
-        setLoading(true);
-      }
-
-      setRefresh(false);
-
       const deliverymanResponse = await api.get(`deliveryman`, {
         params: {
           id: user.id,
@@ -99,11 +94,9 @@ const Dashboard = ({ navigation }) => {
           : null,
       }));
 
-      if (load) {
-        setLoading(false);
-      }
-
+      setLoading(false);
       setDeliveryman(deliverymanResponse.data);
+      setRefresh(false);
 
       if (orders) {
         setOrders([...orders, ...ordersParsed]);
@@ -111,6 +104,8 @@ const Dashboard = ({ navigation }) => {
         setOrders(ordersParsed);
       }
     } catch (err) {
+      setRefresh(false);
+
       Alert.alert(
         'Erro na listagem',
         'Não foi possível obter dados, contate o administrador do sistema'
@@ -123,6 +118,9 @@ const Dashboard = ({ navigation }) => {
     setSelectPending(true);
     setSelectDelivered(false);
 
+    if (searchState === 'pending') {
+      setRefresh(true);
+    }
     setSearchState('pending');
     setPage(INITIAL_PAGE_VALUE);
     setOrders(INITIAL_ORDERS_VALUE);
@@ -133,13 +131,18 @@ const Dashboard = ({ navigation }) => {
     setSelectDelivered(true);
     setSelectPending(false);
 
+    if (searchState === 'delivered') {
+      setRefresh(true);
+    }
+
     setSearchState('delivered');
+    setRefresh(!refresh);
     setPage(INITIAL_PAGE_VALUE);
     setOrders(INITIAL_ORDERS_VALUE);
   }, [INITIAL_ORDERS_VALUE, INITIAL_PAGE_VALUE]);
 
   const refreshOrders = useCallback(() => {
-    setRefresh(true);
+    setRefresh(!refresh);
     setPage(INITIAL_PAGE_VALUE);
     setOrders(INITIAL_ORDERS_VALUE);
   }, [INITIAL_ORDERS_VALUE, INITIAL_PAGE_VALUE]);
@@ -150,6 +153,11 @@ const Dashboard = ({ navigation }) => {
 
   return (
     <Container>
+      {/* if user came from another screen, state orders will be updated */}
+      {navigation.getParam('refresh') ? (
+        <NavigationEvents onWillFocus={refreshOrders} />
+      ) : null}
+
       <WelcomeProfile Deliveryman={deliveryman} />
       <Header>
         <Title>Entregas</Title>
@@ -169,7 +177,7 @@ const Dashboard = ({ navigation }) => {
         <Deliveries
           data={orders}
           keyExtractor={(item) => String(item.id)}
-          onEndReachedThreshold={0.1}
+          onEndReachedThreshold={0.4}
           onEndReached={() => setPage(page + 1)}
           onRefresh={refreshOrders}
           refreshing={loading}

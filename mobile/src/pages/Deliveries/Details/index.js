@@ -33,7 +33,8 @@ const Details = ({ navigation }) => {
         [
           {
             text: 'Ok',
-            onPress: () => navigation.navigate('Dashboard'),
+            onPress: () =>
+              navigation.navigate('Dashboard', { refresh: 'refresh' }),
           },
         ],
         { cancelable: false }

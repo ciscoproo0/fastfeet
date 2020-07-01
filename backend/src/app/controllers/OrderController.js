@@ -31,8 +31,8 @@ class OrderController {
           'end_date',
           'canceled_at',
         ],
-        limit: 4,
-        offset: (page - 1) * 4,
+        limit: 20,
+        offset: (page - 1) * 20,
         include: [
           {
             model: Deliveryman,
@@ -87,8 +87,8 @@ class OrderController {
           'end_date',
           'canceled_at',
         ],
-        limit: 4,
-        offset: (page - 1) * 4,
+        limit: 20,
+        offset: (page - 1) * 20,
         include: [
           {
             model: Deliveryman,
@@ -143,8 +143,8 @@ class OrderController {
         'end_date',
         'canceled_at',
       ],
-      limit: 4,
-      offset: (page - 1) * 4,
+      limit: 20,
+      offset: (page - 1) * 20,
       include: [
         {
           model: Deliveryman,
