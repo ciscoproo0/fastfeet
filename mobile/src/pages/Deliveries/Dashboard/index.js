@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Alert, ActivityIndicator } from 'react-native';
+import { Alert, ActivityIndicator, Text } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import pt from 'date-fns/locale/pt-BR';
 import { utcToZonedTime } from 'date-fns-tz';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import api from '../../../services/api';
 
@@ -19,6 +20,8 @@ import {
   PendingText,
   DeliveredButton,
   DeliveredText,
+  NoDelivery,
+  NoDeliveryText,
 } from './styles';
 
 import WelcomeProfile from '../../../components/WelcomeProfile';
@@ -153,7 +156,7 @@ const Dashboard = ({ navigation }) => {
 
   return (
     <Container>
-      {/* if user came from another screen, state orders will be updated */}
+      {/* if user came from another screen, such as 'confirm delivery' then state orders will be updated */}
       {navigation.getParam('refresh') ? (
         <NavigationEvents onWillFocus={refreshOrders} />
       ) : null}
@@ -171,7 +174,12 @@ const Dashboard = ({ navigation }) => {
           </DeliveredButton>
         </SelectOrderStatus>
       </Header>
-      {loading ? (
+      {orders.length === 0 ? (
+        <NoDelivery onPress={refreshOrders}>
+          <Icon name="inbox" size={150} color="#7d40e7" />
+          <NoDeliveryText>Sem Entregas</NoDeliveryText>
+        </NoDelivery>
+      ) : loading ? (
         <ActivityIndicator size={100} color="#7d40e7" />
       ) : (
         <Deliveries

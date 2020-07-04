@@ -20,7 +20,7 @@ export default function Edit({
   const refRecipient = useRef();
   const refDeliveryman = useRef();
 
-  async function loadOptions() {
+  const loadOptions = async () => {
     try {
       const recipientResponse = await api.get('/recipients');
 
@@ -33,9 +33,9 @@ export default function Edit({
         'Erro ao carregar destinatários e/ou entregadores, contate o administrador do sistema'
       );
     }
-  }
+  };
 
-  function handleSubmit(event) {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
     const { id: recipientId, name, zip_code, number } = recipient.find(
@@ -82,7 +82,7 @@ export default function Edit({
         );
       }
     }
-  }
+  };
 
   useEffect(() => {
     loadOptions();

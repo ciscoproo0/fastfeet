@@ -28,7 +28,7 @@ export default function Edit(props) {
   const [state, setState] = useState(recipient?.state ?? '');
   const [zipCode, setZipCode] = useState(recipient?.zip_code ?? '');
 
-  async function handleSubmit(event) {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!recipient) {
@@ -66,7 +66,7 @@ export default function Edit(props) {
         );
       }
     }
-  }
+  };
 
   return (
     <Container>

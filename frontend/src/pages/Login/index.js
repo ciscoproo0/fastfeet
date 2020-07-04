@@ -20,11 +20,11 @@ export default function Login() {
     setPassword(event.target.value);
   };
 
-  function handleSubmit(event) {
+  const handleSubmit = (event) => {
     event.preventDefault();
     document.getElementById('submit').disabled = true;
     dispatch(loginRequest(email, password, loading));
-  }
+  };
 
   return (
     <Container>

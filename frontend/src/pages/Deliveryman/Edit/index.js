@@ -28,11 +28,12 @@ export default function Edit(props) {
   const oldEmail = deliveryman?.email ?? null;
   const ref = useRef();
 
-  function handleFile(event) {
+  const handleFile = (event) => {
     if (event.target.files[0].size > 2000000) {
       toast.error('Selecione um arquivo menor que 2mb');
       return;
     }
+
     const data = new FormData();
 
     // To preview uploaded image
@@ -47,14 +48,17 @@ export default function Edit(props) {
     data.append('file', event.target.files[0]);
 
     setFile(data);
-  }
-  function handleName(event) {
+  };
+
+  const handleName = (event) => {
     setName(event.target.value);
-  }
-  function handleEmail(event) {
+  };
+
+  const handleEmail = (event) => {
     setEmail(event.target.value);
-  }
-  async function handleSubmit(event) {
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (file) {
       const { data } = await api.post('files', file);
@@ -94,7 +98,7 @@ export default function Edit(props) {
         );
       }
     }
-  }
+  };
 
   return (
     <Container>

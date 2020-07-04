@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Container, Items, Profile } from './styles';
 
@@ -11,57 +11,44 @@ import { logout } from '../../store/modules/auth/actions';
 
 export default function Header() {
   const dispatch = useDispatch();
+  const selected = useSelector((state) => state.menu.menuState);
 
-  function handleMenuRegister(event) {
+  const handleMenuRegister = (event) => {
     event.target.focus = true;
 
     dispatch(menuRegister(event.target.id));
-  }
+  };
 
-  function handleLogout() {
+  const handleLogout = () => {
     dispatch(logout());
-  }
+  };
+
+  const menuItems = [
+    'encomendas',
+    'entregadores',
+    'destinatarios',
+    'problemas',
+  ];
+
+  useEffect(() => {
+    document.getElementById(selected).style.color = '#444444';
+  }, [selected]);
 
   return (
     <Container>
       <img src={Logo} alt="FastFeet" />
       <Items>
-        <li>
-          <Link
-            to="/encomendas"
-            id="Encomendas"
-            onClick={(event) => handleMenuRegister(event)}
-          >
-            ENCOMENDAS
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/entregadores"
-            id="Entregadores"
-            onClick={(event) => handleMenuRegister(event)}
-          >
-            ENTREGADORES
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/destinatarios"
-            id="Destinatários"
-            onClick={(event) => handleMenuRegister(event)}
-          >
-            DESTINATÁRIOS
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/problemas"
-            id="Problemas"
-            onClick={(event) => handleMenuRegister(event)}
-          >
-            PROBLEMAS
-          </Link>
-        </li>
+        {menuItems.map((item) => (
+          <li key={item}>
+            <Link
+              to={`/${item}`}
+              id={`${item}`}
+              onClick={(event) => handleMenuRegister(event)}
+            >
+              {item.toUpperCase()}
+            </Link>
+          </li>
+        ))}
       </Items>
       <Profile>
         <strong>Admin FastFeet</strong>

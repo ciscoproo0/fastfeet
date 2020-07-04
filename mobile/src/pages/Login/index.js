@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Image } from 'react-native';
 
-import logo from '../../assets/images/fastfeet-logo.png';
+import logo from '../../assets/fastfeet-logo.png';
 
 import { loginRequest } from '../../store/modules/auth/actions';
 
 import { Container, Form, FormInput, SubmitButton, TextButton } from './styles';
 
-const Login = ({ navigation }) => {
+const Login = () => {
   const dispatch = useDispatch();
 
   const [id, setId] = useState();
@@ -39,10 +38,6 @@ const Login = ({ navigation }) => {
       </Form>
     </Container>
   );
-};
-
-Login.propTypes = {
-  navigation: PropTypes.instanceOf(Object).isRequired,
 };
 
 export default Login;

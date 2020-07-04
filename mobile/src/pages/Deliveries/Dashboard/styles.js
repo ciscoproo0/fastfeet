@@ -9,7 +9,6 @@ export const Container = styled.SafeAreaView`
 
 export const Deliveries = styled.FlatList.attrs({
   showsVerticalScrollIndicator: false,
-  // contentContainerStyle: { padding: 30 },
 })``;
 
 export const Header = styled.View`
@@ -51,4 +50,22 @@ export const DeliveredText = styled.Text`
   font-weight: bold;
   font-size: 14px;
   padding: 5px;
+`;
+
+export const NoDelivery = styled(RectButton)`
+  display: flex;
+  flex-direction: column;
+
+  margin: 100px auto 0px;
+  padding: 80px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+`;
+
+export const NoDeliveryText = styled.Text`
+  align-self: center;
+  padding: 5px;
+  font-size: 20px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.6);
 `;

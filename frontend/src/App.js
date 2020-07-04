@@ -13,7 +13,7 @@ import GlobalStyles from './styles/global';
 import Routes from './routes';
 import history from './services/history';
 
-function App() {
+const App = () => {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
@@ -25,6 +25,6 @@ function App() {
       </PersistGate>
     </Provider>
   );
-}
+};
 
 export default App;

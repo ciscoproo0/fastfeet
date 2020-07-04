@@ -16,7 +16,7 @@ export default function Recipients() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
 
-  async function listRecipients(query) {
+  const listRecipients = async (query) => {
     const url = `/recipients`;
     let response;
 
@@ -50,15 +50,15 @@ export default function Recipients() {
 
     setRecipients(response.data);
     setLoading(false);
-  }
+  };
 
-  async function handleSearch(event) {
+  const handleSearch = async (event) => {
     setPage(1);
     setLoading(false);
     listRecipients(event);
-  }
+  };
 
-  async function handleDelete(id) {
+  const handleDelete = async (id) => {
     if (id) {
       try {
         await api.delete(`/recipients/${id}`);
@@ -70,17 +70,17 @@ export default function Recipients() {
         );
       }
     }
-  }
+  };
 
-  function previousPage() {
+  const previousPage = () => {
     setPage(page - 1);
     setLoading(false);
-  }
+  };
 
-  function nextPage() {
+  const nextPage = () => {
     setPage(page + 1);
     setLoading(false);
-  }
+  };
 
   useEffect(() => {
     listRecipients();

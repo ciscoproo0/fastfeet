@@ -10,18 +10,18 @@ import history from '../../services/history';
 export default function Search({ handleSearch }) {
   const menuValue = useSelector((state) => state.menu.menuState);
 
-  function standardCaracteres(value) {
+  const standardCaracteres = (value) => {
     const parsed = value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
     return parsed;
-  }
+  };
 
-  function handleKeyPress(event) {
+  const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
       handleSearch(event.target.value);
     }
-  }
+  };
 
   return (
     <Container>

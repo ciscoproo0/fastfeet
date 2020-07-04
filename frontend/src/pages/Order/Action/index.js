@@ -13,18 +13,18 @@ export default function Action({ order, handleModal, handleDelete }) {
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
 
-  function handleModalEmitter() {
+  const handleModalEmitter = () => {
     dispatch(detailsState(order));
     handleModal(true);
     setVisible(!visible);
-  }
+  };
 
-  function handleDeleteEmitter() {
+  const handleDeleteEmitter = () => {
     if (window.confirm('Tem certeza que deseja excluir esta encomenda?')) {
       handleDelete(order.id);
     }
     setVisible(!visible);
-  }
+  };
 
   return (
     <Container>

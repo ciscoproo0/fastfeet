@@ -10,27 +10,12 @@ export default function Pagination({
   previousPage,
   stateLength,
 }) {
-  function nextPageEmitter() {
-    nextPage();
-  }
-  function previousPageEmitter() {
-    previousPage();
-  }
-
   return (
     <NavigationButtons>
-      <button
-        type="button"
-        disabled={pageCurrent <= 1}
-        onClick={() => previousPageEmitter()}
-      >
+      <button type="button" disabled={pageCurrent <= 1} onClick={previousPage}>
         <MdKeyboardArrowLeft size={30} />
       </button>
-      <button
-        type="button"
-        disabled={stateLength < 20}
-        onClick={() => nextPageEmitter()}
-      >
+      <button type="button" disabled={stateLength < 20} onClick={nextPage}>
         <MdKeyboardArrowRight size={30} />
       </button>
     </NavigationButtons>

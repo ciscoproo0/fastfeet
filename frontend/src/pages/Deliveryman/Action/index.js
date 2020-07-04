@@ -9,16 +9,16 @@ import { Container, MoreInfo } from './styles';
 export default function Action({ deliveryman, handleDelete }) {
   const [visible, setVisible] = useState(false);
 
-  function handleVisible() {
+  const handleVisible = () => {
     setVisible(!visible);
-  }
+  };
 
-  function handleDeleteEmitter() {
+  const handleDeleteEmitter = () => {
     if (window.confirm('Tem certeza que deseja excluir entregador(a)?')) {
       handleDelete(deliveryman.id);
     }
     setVisible(!visible);
-  }
+  };
 
   return (
     <Container>

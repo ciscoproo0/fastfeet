@@ -18,7 +18,7 @@ export default function Problems() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
 
-  async function listProblems() {
+  const listProblems = async () => {
     try {
       const url = '/delivery-problems';
       const { data } = await api.get(url, {
@@ -34,22 +34,23 @@ export default function Problems() {
         'Ocorreu um erro ao carregar problemas, contate o administrador do sistema.'
       );
     }
-  }
+  };
 
-  function handleModal() {
+  const handleModal = () => {
     setShowModal(!showModal);
-  }
+  };
 
-  function previousPage() {
+  const previousPage = () => {
     setPage(page - 1);
     setLoading(false);
-  }
+  };
 
-  function nextPage() {
+  const nextPage = () => {
     setPage(page + 1);
     setLoading(false);
-  }
-  async function handleCancelOrder(id) {
+  };
+
+  const handleCancelOrder = async (id) => {
     if (id) {
       try {
         await api.delete(`/orders/${id}`);
@@ -61,7 +62,7 @@ export default function Problems() {
         );
       }
     }
-  }
+  };
 
   useEffect(() => {
     listProblems();

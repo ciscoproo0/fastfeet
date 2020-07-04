@@ -9,12 +9,12 @@ import { Container, MoreInfo } from './styles';
 export default function Action({ recipient, handleDelete }) {
   const [visible, setVisible] = useState(false);
 
-  function handleDeleteEmitter() {
+  const handleDeleteEmitter = () => {
     if (window.confirm('Tem certeza que deseja excluir destinatário?')) {
       handleDelete(recipient.id);
     }
     setVisible(!visible);
-  }
+  };
 
   return (
     <Container show={visible}>
@@ -43,9 +43,5 @@ export default function Action({ recipient, handleDelete }) {
 
 Action.propTypes = {
   handleDelete: PropTypes.func.isRequired,
-  recipient: PropTypes.node,
-};
-
-Action.defaultProps = {
-  recipient: null,
+  recipient: PropTypes.instanceOf(Object).isRequired,
 };

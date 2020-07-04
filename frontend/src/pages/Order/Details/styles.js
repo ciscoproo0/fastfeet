@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 export const ModalContainer = styled.div`
-  /* visibility: ${(props) => (props.show ? 'visible' : 'hidden')}; */
   position: fixed;
   z-index: 99;
   top: 0;
@@ -67,8 +66,7 @@ export const DeliverySignature = styled.div`
   }
 
   img {
-    width: 300px;
-    height: 150px;
+    width: 500px;
     margin: 5px auto;
   }
 `;

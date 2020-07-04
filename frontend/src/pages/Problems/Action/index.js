@@ -12,18 +12,18 @@ export default function Action({ handleCancelOrder, handleModal, problem }) {
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
 
-  function handleShowModal() {
+  const handleShowModal = () => {
     handleModal(true);
     setVisible(!visible);
     dispatch(problemsState(problem));
-  }
+  };
 
-  async function handleCancelOrderEmitter() {
+  const handleCancelOrderEmitter = async () => {
     if (window.confirm('Tem certeza que deseja cancelar esta encomenda?')) {
       handleCancelOrder(problem.delivery_id);
     }
     setVisible(!visible);
-  }
+  };
 
   return (
     <Container>
@@ -47,5 +47,5 @@ export default function Action({ handleCancelOrder, handleModal, problem }) {
 Action.propTypes = {
   handleCancelOrder: PropTypes.func.isRequired,
   handleModal: PropTypes.func.isRequired,
-  problem: PropTypes.node.isRequired,
+  problem: PropTypes.instanceOf(Object).isRequired,
 };

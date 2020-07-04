@@ -18,7 +18,7 @@ export default function Deliveryman() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
 
-  async function listDeliveryman(query) {
+  const listDeliveryman = async (query) => {
     const url = `/deliveryman`;
     let response;
 
@@ -26,7 +26,7 @@ export default function Deliveryman() {
       try {
         response = await api.get(url, {
           params: {
-            q: query,
+            name: query,
           },
         });
 
@@ -52,15 +52,15 @@ export default function Deliveryman() {
 
     setDeliverymanList(response.data);
     setLoading(false);
-  }
+  };
 
-  async function handleSearch(event) {
+  const handleSearch = async (event) => {
     setPage(1);
     setLoading(true);
     listDeliveryman(event);
-  }
+  };
 
-  async function handleDelete(id) {
+  const handleDelete = async (id) => {
     if (id) {
       try {
         await api.delete(`/deliveryman/${id}`);
@@ -72,17 +72,17 @@ export default function Deliveryman() {
         );
       }
     }
-  }
+  };
 
-  function previousPage() {
+  const previousPage = () => {
     setPage(page - 1);
     setLoading(true);
-  }
+  };
 
-  function nextPage() {
+  const nextPage = () => {
     setPage(page + 1);
     setLoading(true);
-  }
+  };
 
   useEffect(() => {
     listDeliveryman();

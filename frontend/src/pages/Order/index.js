@@ -31,7 +31,7 @@ export default function Delivery() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
 
-  async function listOrders(query) {
+  const listOrders = async (query) => {
     const url = `/orders`;
     let response;
 
@@ -109,15 +109,15 @@ export default function Delivery() {
     }));
     setOrderList(order);
     setLoading(false);
-  }
+  };
 
-  async function handleSearch(searchValue) {
+  const handleSearch = async (searchValue) => {
     setPage(1);
     setLoading(true);
     listOrders(searchValue);
-  }
+  };
 
-  async function handleDelete(id) {
+  const handleDelete = async (id) => {
     if (id) {
       try {
         await api.delete(`/orders/${id}`);
@@ -129,13 +129,13 @@ export default function Delivery() {
         );
       }
     }
-  }
+  };
 
-  function handleModal(value) {
+  const handleModal = (value) => {
     setShowModal(value);
-  }
+  };
 
-  function Status(value) {
+  const Status = (value) => {
     if (value.start_date && value.end_date && !value.canceled_at) {
       return (
         <OrderDelivered>
@@ -168,17 +168,17 @@ export default function Delivery() {
         </OrderCanceled>
       );
     }
-  }
+  };
 
-  function previousPage() {
+  const previousPage = () => {
     setPage(page - 1);
     setLoading(true);
-  }
+  };
 
-  function nextPage() {
+  const nextPage = () => {
     setPage(page + 1);
     setLoading(true);
-  }
+  };
 
   // when a page changes, it calls listOrders again
   useEffect(() => {
