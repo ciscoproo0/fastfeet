@@ -7,7 +7,7 @@
 ---
 ## Fastfeet API
 
-Fastfeet API was built using NodeJS, Postgres to persist data regarding aplication and Redis (with beQueue) to manage email dispatch.
+Fastfeet API was built using NodeJS and Postgres to persist data regarding application.
 
 <p align="right"><a href="https://documenter.getpostman.com/view/4255399/SzezdCGx">Here </a>you will find all API requests and parameters</p>
 
